@@ -6,8 +6,6 @@ import (
 
 	iCoreApi "github.com/hecc-blot/framework/contract/api"
 	metricsContract "github.com/hecc-blot/metrics/contract"
-
-	"github.com/gin-gonic/gin"
 )
 
 // HttpMetricsMiddleware 为每个 HTTP 请求记录请求总数与耗时分布，
@@ -21,7 +19,7 @@ func NewHttpMiddleware(m metricsContract.IMetrics) iCoreApi.IMiddleware {
 	return &HttpMetricsMiddleware{metrics: m}
 }
 
-func (h *HttpMetricsMiddleware) Middleware() any {
+func (h *HttpMetricsMiddleware) Middleware() iCoreApi.MiddlewareFunc {
 	// 指标在注册阶段创建一次、跨请求复用（标签按 method/path/status 细分）。
 	requests := h.metrics.NewCounter(
 		"http_requests_total",
@@ -34,13 +32,13 @@ func (h *HttpMetricsMiddleware) Middleware() any {
 		"method", "path", "status",
 	)
 
-	return func(c *gin.Context) {
+	return func(ctx iCoreApi.IContext) {
 		start := time.Now()
-		c.Next()
+		ctx.Next()
 
-		method := c.Request.Method
-		path := routePattern(c)
-		status := strconv.Itoa(c.Writer.Status())
+		method := ctx.Method()
+		path := routePattern(ctx)
+		status := strconv.Itoa(ctx.Status())
 
 		duration.WithLabelValues(method, path, status).Observe(time.Since(start).Seconds())
 		requests.WithLabelValues(method, path, status).Inc()
@@ -49,8 +47,8 @@ func (h *HttpMetricsMiddleware) Middleware() any {
 
 // routePattern 取路由模板（如 /account/:id）作为 path 标签，
 // 避免把真实 ID 打散成高基数序列。未匹配路由（FullPath 为空，如 404）回退为 "unmatched"。
-func routePattern(c *gin.Context) string {
-	if p := c.FullPath(); p != "" {
+func routePattern(ctx iCoreApi.IContext) string {
+	if p := ctx.FullPath(); p != "" {
 		return p
 	}
 	return "unmatched"

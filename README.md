@@ -40,7 +40,7 @@ metricsSvc := metrics.NewMetrics(&metricsConf.Config{Namespace: "myapp"})
 
 ```go
 // 采集端点挂到 HTTP 路由
-apiHandle.Engine().GET(config.Metrics.Path, gin.WrapH(metricsSvc.Handler()))
+apiHandle.Handle(http.MethodGet, config.Metrics.Path, metricsSvc.Handler())
 
 // 自动采集 QPS / 延迟 / 错误率（path 用路由模板避免高基数）
 apiHandle.Middleware(metrics.NewHttpMiddleware(metricsSvc))

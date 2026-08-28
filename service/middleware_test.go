@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	httpSvc "github.com/hecc-blot/framework/service/http"
 )
 
 // newTestEngine 组装带指标中间件的 gin 引擎，挂载采集端点。
@@ -17,7 +19,7 @@ func newTestEngine(t *testing.T) *gin.Engine {
 	m := NewMetrics(nil)
 
 	r := gin.New()
-	mw := gin.HandlerFunc(NewHttpMiddleware(m).Middleware().(func(*gin.Context)))
+	mw := httpSvc.AdaptMiddleware(NewHttpMiddleware(m).Middleware())
 	r.Use(mw)
 	r.GET("/metrics", gin.WrapH(m.Handler()))
 	return r

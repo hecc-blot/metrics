@@ -39,7 +39,7 @@ type IHistogramVec interface {
 // IMetrics 监控指标：注册指标并暴露 Prometheus 采集端点。
 type IMetrics interface {
 	// Handler 返回 Prometheus 采集端点，供挂载到 HTTP 路由
-	// （如 api.Engine().GET(cfg.Path, gin.WrapH(m.Handler()))）。
+	// （如 api.Handle(http.MethodGet, cfg.Path, m.Handler())）。
 	Handler() http.Handler
 
 	// NewCounter 创建带标签计数器。labelNames 为标签维度，与 WithLabelValues 一一对应。

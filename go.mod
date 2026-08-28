@@ -4,7 +4,7 @@ go 1.26.1
 
 require (
 	github.com/gin-gonic/gin v1.12.0
-	github.com/hecc-blot/framework v0.1.2
+	github.com/hecc-blot/framework v0.1.5
 	github.com/prometheus/client_golang v1.24.1
 	github.com/stretchr/testify v1.12.1
 )
