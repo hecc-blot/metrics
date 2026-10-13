@@ -23,12 +23,12 @@ func (h *HttpMetricsMiddleware) Middleware() iCoreApi.MiddlewareFunc {
 	// 指标在注册阶段创建一次、跨请求复用（标签按 method/path/status 细分）。
 	requests := h.metrics.NewCounter(
 		"http_requests_total",
-		"HTTP 请求总数",
+		"Total number of HTTP requests.",
 		"method", "path", "status",
 	)
 	duration := h.metrics.NewHistogram(
 		"http_request_duration_seconds",
-		"HTTP 请求耗时分布（秒）",
+		"HTTP request duration distribution in seconds.",
 		"method", "path", "status",
 	)
 

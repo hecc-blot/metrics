@@ -70,7 +70,7 @@ type MockCounter struct {
 	Added    []float64
 }
 
-func (m *MockCounter) Inc()             { m.IncCalls++ }
+func (m *MockCounter) Inc()              { m.IncCalls++ }
 func (m *MockCounter) Add(delta float64) { m.Added = append(m.Added, delta) }
 
 // MockCounterVec 记录 WithLabelValues 调用，返回共享的 MockCounter。
@@ -96,8 +96,8 @@ type MockGauge struct {
 	SetValue *float64
 }
 
-func (m *MockGauge) Inc()             { m.IncCalls++ }
-func (m *MockGauge) Dec()             { m.DecCalls++ }
+func (m *MockGauge) Inc()              { m.IncCalls++ }
+func (m *MockGauge) Dec()              { m.DecCalls++ }
 func (m *MockGauge) Add(delta float64) { m.Added = append(m.Added, delta) }
 func (m *MockGauge) Set(value float64) {
 	v := value
